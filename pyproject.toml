@@ -5,7 +5,9 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "dotenv>=0.9.9",
     "fastapi[standard]>=0.116.1",
+    "google-cloud-bigquery>=3.35.1",
     "polars>=1.32.3",
     "sqlmodel>=0.0.24",
     "uvicorn[standard]>=0.35.0",

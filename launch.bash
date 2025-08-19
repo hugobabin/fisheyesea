@@ -19,5 +19,9 @@ tmux send-keys -t $SESSION_NAME "uv run fastapi dev main.py" C-m
 tmux split-window -h -t $SESSION_NAME
 tmux send-keys -t $SESSION_NAME "cd frontend && npm run dev" C-m
 
+# Split right window vertically and run docker-compose
+tmux split-window -v -t $SESSION_NAME
+tmux send-keys -t $SESSION_NAME "cd db && docker-compose up -d --build" C-m
+
 # Attach to session
 tmux attach -t $SESSION_NAME
