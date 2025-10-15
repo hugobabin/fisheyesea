@@ -1,0 +1,26 @@
+version: 1
+handlers:
+  console:
+    class: rich.logging.RichHandler
+    level: INFO
+    markup: true
+    show_time: true
+    show_level: true
+  error_console:
+    class: rich.logging.RichHandler
+    level: ERROR
+    markup: true
+    show_time: true
+    show_level: true
+loggers:
+  uvicorn:
+    level: WARNING
+  uvicorn.critical:
+    level: CRITICAL
+    handlers: [error_console]
+  uvicorn.error:
+    level: ERROR
+    handlers: [error_console]
+  uvicorn.access:
+    level: INFO
+    handlers: [console]
