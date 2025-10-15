@@ -1,0 +1,15 @@
+[project]
+name = "fisheyesea"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "duckdb>=1.4.1",
+    "fastapi[standard]>=0.119.0",
+    "httpx>=0.28.1",
+    "mariadb>=1.1.14",
+    "pandas>=2.3.3",
+    "pymongo>=4.15.3",
+    "selectolax>=0.4.0",
+]
