@@ -6,6 +6,10 @@ __pycache__/
 # env
 .env
 
+# datas
+data/mongo
+data/fisheyesea*
+
 # C extensions
 *.so
 

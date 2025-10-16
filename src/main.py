@@ -11,6 +11,7 @@ from rich.console import Console
 
 from routers.countries import router as router_countries
 from routers.fishingefforts import router as router_fishing_efforts
+from services.etl import ServiceETL
 from services.log import ServiceLog
 
 console = Console()
@@ -30,6 +31,7 @@ async def lifespan(app: FastAPI):  # noqa: ANN201
     """Set up lifespan."""
     if os.getenv("WITH_ETL") == "true":
         console.print("[bold yellow]running etl scripts...")
+        ServiceETL.process()
     await init_routers(app=app)
     console.print("✅ [bold cyan]fisheyesea is ready at http://127.0.0.1:8000")
     yield
