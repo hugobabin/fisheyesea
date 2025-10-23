@@ -10,6 +10,7 @@ dependencies = [
     "httpx>=0.28.1",
     "mariadb>=1.1.14",
     "pandas>=2.3.3",
+    "pycountry>=24.6.1",
     "pymongo>=4.15.3",
     "selectolax>=0.4.0",
 ]

@@ -18,8 +18,8 @@ run_etl_skip_mongo:
 
 # skip both mongo/api etl
 run_etl_skip_bigdata:
-	@ETL_MONGO_DISABLED=true ETL_API_DISABLED=true launch-with-etl.bash
+	@ETL_MONGO_DISABLED=true ETL_API_DISABLED=true bash launch-with-etl.bash
 
 # skip both csv/webscrap/sqlite etl
 run_etl_skip_others:
-	@ETL_CSV_DISABLED=true ETL_WEBSCRAP_DISABLED=true ETL_SQLITE_DISABLED=true launch-with-etl.bash
+	@ETL_CSV_DISABLED=true ETL_WEBSCRAP_DISABLED=true ETL_SQLITE_DISABLED=true bash launch-with-etl.bash

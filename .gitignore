@@ -9,6 +9,7 @@ __pycache__/
 # datas
 data/mongo
 data/fisheyesea*
+data
 
 # C extensions
 *.so
