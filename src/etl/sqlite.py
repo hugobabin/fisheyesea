@@ -37,21 +37,24 @@ def create_database(cur) -> None:
     """Create/replace tables."""
     query_fishery_production_per_year = """
         CREATE OR REPLACE TABLE fishery_production_per_year (
-            year YEAR PRIMARY KEY NOT NULL,
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            year YEAR NOT NULL,
             country_code VARCHAR(3) NOT NULL,
             production INT UNSIGNED DEFAULT 0
         );
     """
     query_seafood_consumption_per_capita_per_year = """
         CREATE OR REPLACE TABLE seafood_consumption_per_capita_per_year (
-            year YEAR PRIMARY KEY NOT NULL,
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            year YEAR NOT NULL,
             country_code VARCHAR(3) NOT NULL,
             consumption INT UNSIGNED DEFAULT 0
         );
     """
     query_population_per_year = """
         CREATE OR REPLACE TABLE population_per_year (
-            year YEAR PRIMARY KEY NOT NULL,
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            year YEAR NOT NULL,
             country_code VARCHAR(3) NOT NULL,
             population INT UNSIGNED DEFAULT 0
         );
@@ -59,7 +62,6 @@ def create_database(cur) -> None:
     query_country = """
         CREATE OR REPLACE TABLE country (
             code VARCHAR(3) PRIMARY KEY NOT NULL,
-            country_code VARCHAR(3) NOT NULL,
             label VARCHAR(128) DEFAULT "Undefined Country"
         );
     """
@@ -78,16 +80,64 @@ def create_database(cur) -> None:
         ADD CONSTRAINT fk_country_population
         FOREIGN KEY (country_code) REFERENCES country(code);
     """
-    cur.execute(query_fishery_production_per_year)
-    cur.execute(query_seafood_consumption_per_capita_per_year)
-    cur.execute(query_population_per_year)
-    cur.execute(query_country)
-    cur.execute(query_constraint_fishery)
-    cur.execute(query_constraint_seafood)
-    cur.execute(query_constraint_population)
+    ServiceMaria.exec(query_fishery_production_per_year)
+    ServiceMaria.exec(query_seafood_consumption_per_capita_per_year)
+    ServiceMaria.exec(query_population_per_year)
+    ServiceMaria.exec(query_country)
+    ServiceMaria.exec(query_constraint_fishery)
+    ServiceMaria.exec(query_constraint_seafood)
+    ServiceMaria.exec(query_constraint_population)
 
 
 def load(data: pd.DataFrame) -> None:
     """Load data into MariaDB."""
     cur = ServiceMaria.get_cursor()
+    data_fishery = data[["Country_Code", "Country_Fishery_Production_2022"]].to_dict(
+        orient="records"
+    )
+    data_seafood = data[
+        ["Country_Code", "Country_Seafood_Consumption_Per_Capita"]
+    ].to_dict(orient="records")
+    data_population = data[["Country_Code", "Country_Population"]].to_dict(
+        orient="records"
+    )
+    data_country = data[["Country_Code"]].to_dict(orient="records")
     create_database(cur)
+    for country in data_country:
+        query = f"""
+            INSERT INTO country (code)
+            VALUES ('{country.get("Country_Code")}')
+            ON DUPLICATE KEY UPDATE code = code;
+        """
+        ServiceMaria.exec(query)
+    for fishery in data_fishery:
+        query = f"""
+            INSERT INTO fishery_production_per_year (year, country_code, production)
+            VALUES (
+                2022,
+                '{fishery.get("Country_Code")}',
+                {fishery.get("Country_Fishery_Production_2022")}
+            )
+        """
+        ServiceMaria.exec(query)
+    for seafood in data_seafood:
+        query = f"""
+            INSERT INTO seafood_consumption_per_capita_per_year (year, country_code, consumption)
+            VALUES (
+                2022,
+                '{seafood.get("Country_Code")}',
+                {seafood.get("Country_Seafood_Consumption_Per_Capita")}
+            )
+        """
+        ServiceMaria.exec(query)
+    for population in data_population:
+        query = f"""
+            INSERT INTO population_per_year (year, country_code, population)
+            VALUES (
+                2022,
+                '{population.get("Country_Code")}',
+                {population.get("Country_Population")}
+            )
+        """
+        ServiceMaria.exec(query)
+    return len(data)

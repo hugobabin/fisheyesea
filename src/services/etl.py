@@ -119,10 +119,10 @@ class ServiceETL:
         loaded = sqlite.load(transformed)
         if loaded is None:
             return
-        # ServiceLog.console(
-        #     "bold yellow",
-        #     f"[ETL/CSV] loaded {loaded} entries from CSV_SEAFOOD_CONSUMPTION data into sqlite",
-        # )
+        ServiceLog.console(
+            "bold yellow",
+            f"[ETL/SQLITE] loaded {loaded} entries into mariadb",
+        )
 
     @staticmethod
     def api(disabled: bool = False) -> None:
@@ -158,7 +158,7 @@ class ServiceETL:
         ServiceLog.console("bold yellow", msg)
 
     @staticmethod
-    def process():
+    def process() -> None:
         """Handle complete ETL process."""
         etl_api_disabled = os.getenv("ETL_API_DISABLED", "false").lower() == "true"
         etl_mongo_disabled = os.getenv("ETL_MONGO_DISABLED", "false").lower() == "true"
