@@ -11,13 +11,14 @@ from rich.console import Console
 
 from routers.countries import router as router_countries
 from routers.fishingefforts import router as router_fishing_efforts
+from routers.security import router as router_security
 from services.etl import ServiceETL
 from services.log import ServiceLog
 from services.db.maria import ServiceMaria
 
 console = Console()
 
-routers = [router_fishing_efforts, router_countries]
+routers = [router_fishing_efforts, router_countries, router_security]
 
 
 async def init_routers(app: FastAPI) -> None:

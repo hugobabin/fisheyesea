@@ -12,5 +12,6 @@ dependencies = [
     "pandas>=2.3.3",
     "pycountry>=24.6.1",
     "pymongo>=4.15.3",
+    "python-jose[cryptography]>=3.5.0",
     "selectolax>=0.4.0",
 ]
