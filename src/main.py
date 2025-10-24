@@ -13,6 +13,7 @@ from routers.countries import router as router_countries
 from routers.fishingefforts import router as router_fishing_efforts
 from services.etl import ServiceETL
 from services.log import ServiceLog
+from services.db.maria import ServiceMaria
 
 console = Console()
 
@@ -29,6 +30,7 @@ async def init_routers(app: FastAPI) -> None:
 @asynccontextmanager
 async def lifespan(app: FastAPI):  # noqa: ANN201
     """Set up lifespan."""
+    ServiceMaria.create_database()
     if os.getenv("WITH_ETL") == "true":
         console.print("[bold yellow]running etl scripts...")
         ServiceETL.process()

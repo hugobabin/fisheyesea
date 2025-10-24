@@ -1,5 +1,6 @@
 services:
   mongo:
+    container_name: mongo
     image: mongo
     restart: always
     ports:
@@ -11,6 +12,7 @@ services:
       - ./data/mongo:/data/db
 
   mongo-express:
+    container_name: mongoexpress
     image: mongo-express
     restart: always
     ports:
@@ -20,3 +22,22 @@ services:
       ME_CONFIG_BASICAUTH_ENABLED: true
       ME_CONFIG_BASICAUTH_USERNAME: user
       ME_CONFIG_BASICAUTH_PASSWORD: user
+
+  # Use root/example as user/password credentials
+  mariadb:
+    container_name: mariadb
+    image: mariadb
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MARIADB_ROOT_PASSWORD: example
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
