@@ -2,7 +2,9 @@
 
 from typing import List
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+
+from services.jwt import get_current_user
 
 from models.country import (
     Country,
@@ -17,7 +19,7 @@ router = APIRouter(prefix="/countries", tags=["Countries"])
 
 
 @router.get("/", response_model=List[Country])
-async def get_countries():
+async def get_countries(user: dict = Depends(get_current_user)):
     """GET /countries — Retrieve all countries."""
     cur = ServiceMaria.get_cursor()
     cur.execute("SELECT code, label FROM country;")
@@ -31,7 +33,7 @@ async def get_countries():
 
 
 @router.get("/{code}", response_model=CountryData)
-async def get_country_data(code: str):
+async def get_country_data(code: str, user: dict = Depends(get_current_user)):
     """GET /countries/{code} — Retrieve aggregated data for a specific country."""
     cur = ServiceMaria.get_cursor()
 
@@ -83,7 +85,7 @@ async def get_country_data(code: str):
 
 
 @router.get("/{code}/population", response_model=List[PopulationPerYear])
-async def get_country_population(code: str):
+async def get_country_population(code: str, user: dict = Depends(get_current_user)):
     """GET /countries/{code}/population — Retrieve population history for a country."""
     cur = ServiceMaria.get_cursor()
     cur.execute(
@@ -100,7 +102,7 @@ async def get_country_population(code: str):
 
 
 @router.get("/{code}/fishery", response_model=List[FisheryProductionPerYear])
-async def get_country_fishery(code: str):
+async def get_country_fishery(code: str, user: dict = Depends(get_current_user)):
     """GET /countries/{code}/fishery — Retrieve fishery production history for a country."""
     cur = ServiceMaria.get_cursor()
     cur.execute(
@@ -117,7 +119,7 @@ async def get_country_fishery(code: str):
 
 
 @router.get("/{code}/seafood", response_model=List[SeafoodConsumptionPerCapitaPerYear])
-async def get_country_seafood(code: str):
+async def get_country_seafood(code: str, user: dict = Depends(get_current_user)):
     """GET /countries/{code}/seafood — Retrieve seafood consumption history for a country."""
     cur = ServiceMaria.get_cursor()
     cur.execute(
