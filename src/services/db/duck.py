@@ -1,12 +1,14 @@
 """Service for handling DuckDB operations."""
 
+from pathlib import Path
+
 import duckdb
 import pandas as pd
 from duckdb import DuckDBPyConnection
 
 from models.fishingeffort import FishingEffort
 
-DUCKDB_PATH = "../data/fisheyesea.duckdb"
+DUCKDB_PATH = Path("../data/fisheyesea.duckdb")
 
 
 class ServiceDuck:

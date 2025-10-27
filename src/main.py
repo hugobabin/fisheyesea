@@ -1,6 +1,7 @@
 """fisheyesea main.py."""
 
 import os
+import sys
 from collections.abc import Callable
 from contextlib import asynccontextmanager
 from typing import Any
@@ -12,9 +13,9 @@ from rich.console import Console
 from routers.countries import router as router_countries
 from routers.fishingefforts import router as router_fishing_efforts
 from routers.security import router as router_security
+from services.db.maria import ServiceMaria
 from services.etl import ServiceETL
 from services.log import ServiceLog
-from services.db.maria import ServiceMaria
 
 console = Console()
 
@@ -32,9 +33,11 @@ async def init_routers(app: FastAPI) -> None:
 async def lifespan(app: FastAPI):  # noqa: ANN201
     """Set up lifespan."""
     ServiceMaria.create_database()
-    if os.getenv("WITH_ETL") == "true":
+    if os.getenv("WITH_ETL") == "true" or os.getenv("ONLY_ETL") == "true":
         console.print("[bold yellow]running etl scripts...")
         ServiceETL.process()
+    if os.getenv("ONLY_ETL") == "true":
+        sys.exit(0)
     await init_routers(app=app)
     console.print("✅ [bold cyan]fisheyesea is ready at http://127.0.0.1:8000")
     yield
