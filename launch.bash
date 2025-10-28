@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 # launch file for fisheyesea
 # bash launch.bash

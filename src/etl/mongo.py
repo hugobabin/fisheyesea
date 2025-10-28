@@ -1,7 +1,7 @@
 import duckdb
 import pandas as pd
 
-from services.db.duck import ServiceDuck
+from services.db.duck import DUCKDB_PATH, ServiceDuck
 from services.db.mongo import ServiceMongo
 from services.log import ServiceLog
 
@@ -42,6 +42,8 @@ def transform(data: list[dict]) -> pd.DataFrame:
 def load(data: pd.DataFrame) -> None:
     """Load Mongo data into DuckDB after cleaning existing data."""
     entries = data.count().max()
+    if DUCKDB_PATH.exists():
+        DUCKDB_PATH.unlink()
     try:
         ServiceDuck.connect()
     except Exception:  # noqa: BLE001

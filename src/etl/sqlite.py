@@ -3,6 +3,7 @@ import pandas as pd
 from services.db.maria import ServiceMaria
 from services.db.sqlite import ServiceSqlite
 from services.log import ServiceLog
+from services.util import ServiceUtil
 
 
 def extract() -> tuple[pd.DataFrame]:
@@ -92,6 +93,7 @@ def create_database(cur) -> None:
 def load(data: pd.DataFrame) -> None:
     """Load data into MariaDB."""
     cur = ServiceMaria.get_cursor()
+    data["Country_Label"] = data["Country_Code"].apply(ServiceUtil.get_country_label)
     data_fishery = data[["Country_Code", "Country_Fishery_Production_2022"]].to_dict(
         orient="records"
     )
@@ -101,12 +103,12 @@ def load(data: pd.DataFrame) -> None:
     data_population = data[["Country_Code", "Country_Population"]].to_dict(
         orient="records"
     )
-    data_country = data[["Country_Code"]].to_dict(orient="records")
+    data_country = data[["Country_Code", "Country_Label"]].to_dict(orient="records")
     create_database(cur)
     for country in data_country:
         query = f"""
-            INSERT INTO country (code)
-            VALUES ('{country.get("Country_Code")}')
+            INSERT INTO country (code, label)
+            VALUES ('{country.get("Country_Code")}', "{country.get('Country_Label')}")
             ON DUPLICATE KEY UPDATE code = code;
         """
         ServiceMaria.exec(query)

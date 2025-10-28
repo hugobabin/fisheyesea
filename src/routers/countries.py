@@ -4,8 +4,6 @@ from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from services.jwt import get_current_user
-
 from models.country import (
     Country,
     CountryData,
@@ -14,11 +12,12 @@ from models.country import (
     SeafoodConsumptionPerCapitaPerYear,
 )
 from services.db.maria import ServiceMaria
+from services.jwt import get_current_user
 
 router = APIRouter(prefix="/countries", tags=["Countries"])
 
 
-@router.get("/", response_model=List[Country])
+@router.get("/", response_model=list[Country])
 async def get_countries(user: dict = Depends(get_current_user)):
     """GET /countries — Retrieve all countries."""
     cur = ServiceMaria.get_cursor()

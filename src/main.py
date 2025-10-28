@@ -7,16 +7,13 @@ from typing import Any
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from rich.console import Console
 
 from routers.countries import router as router_countries
 from routers.fishingefforts import router as router_fishing_efforts
 from routers.security import router as router_security
+from services.db.maria import ServiceMaria
 from services.etl import ServiceETL
 from services.log import ServiceLog
-from services.db.maria import ServiceMaria
-
-console = Console()
 
 routers = [router_fishing_efforts, router_countries, router_security]
 
@@ -25,7 +22,7 @@ async def init_routers(app: FastAPI) -> None:
     """Set up routers listed in {routers}."""
     for router in routers:
         app.include_router(router)
-        console.print(f"✅ [bold green]set up router towards {router.prefix}")
+        ServiceLog.console("bold green", f"✅ set up router towards {router.prefix}")
 
 
 @asynccontextmanager
@@ -33,12 +30,12 @@ async def lifespan(app: FastAPI):  # noqa: ANN201
     """Set up lifespan."""
     ServiceMaria.create_database()
     if os.getenv("WITH_ETL") == "true":
-        console.print("[bold yellow]running etl scripts...")
+        ServiceLog.console("bold yellow", "running etl scripts...")
         ServiceETL.process()
     await init_routers(app=app)
-    console.print("✅ [bold cyan]fisheyesea is ready at http://127.0.0.1:8000")
+    ServiceLog.console("bold cyan", "✅ fisheyesea is ready at http://127.0.0.1:8000")
     yield
-    console.print("🌊​ [bold red]shutting down fisheyesea...")
+    ServiceLog.console("​bold red", "shutting down fisheyesea...")
 
 
 app = FastAPI(lifespan=lifespan)

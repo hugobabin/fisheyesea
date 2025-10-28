@@ -2,7 +2,7 @@
 
 import os
 
-from etl import api, csv, mongo, webscrap, sqlite
+from etl import api, csv, mongo, sqlite, webscrap
 from services.db.sqlite import ServiceSqlite
 from services.log import ServiceLog
 
@@ -11,29 +11,28 @@ class ServiceETL:
     """ServiceETL."""
 
     @staticmethod
-    def webscrap(disabled: bool = False):
+    def webscrap(disabled: bool = False) -> None:
         """Handle Webscraping ETL engine."""
         if disabled:
             return
-        data = webscrap.extract_population()
+        data = webscrap.extract()
         if data is None:
             return
         ServiceLog.console(
             "bold yellow",
             "[ETL/WEBSCRAP] extracted data about population",
         )
-        transformed = webscrap.transform_population(data)
+        transformed = webscrap.transform(data)
         if transformed is None:
             return
-        loaded = webscrap.load_population(transformed)
+        loaded = webscrap.load(transformed)
         if loaded is None:
             return
-        msg = f"[ETL/WEBSCRAP] loaded {loaded} entries into CSV about population"
+        msg = f"[ETL/WEBSCRAP] loaded {loaded} entries into CSV"
         ServiceLog.console("bold yellow", msg)
-        # data = webscrap.extract_fisheries_production()
 
     @staticmethod
-    def csv_population(disabled: bool = False):
+    def csv_population(disabled: bool = False) -> None:
         """Handle CSV ETL engine."""
         if disabled:
             return
@@ -56,7 +55,7 @@ class ServiceETL:
         )
 
     @staticmethod
-    def csv_fisheries_production(disabled: bool = False):
+    def csv_fisheries_production(disabled: bool = False) -> None:
         """Handle CSV ETL engine."""
         if disabled:
             return
@@ -79,7 +78,7 @@ class ServiceETL:
         )
 
     @staticmethod
-    def csv_seafood_consumption(disabled: bool = False):
+    def csv_seafood_consumption(disabled: bool = False) -> None:
         """Handle CSV ETL engine."""
         if disabled:
             return
