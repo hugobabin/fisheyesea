@@ -52,4 +52,7 @@ run_etl_skip_bigdata:
 
 # skip both csv/webscrap/sqlite etl
 run_etl_skip_others:
-	@ETL_CSV_DISABLED=true ETL_WEBSCRAP_DISABLED=true ETL_SQLITE_DISABLED=true bash launch-with-etl.bash
+	@ETL_CSV_DISABLED=true ETL_WEBSCRAP_DISABLED=true ETL_SQLITE_DISABLED=true bash launch-with-etl.
+
+# export_duckdb_data:
+# 	@bash 
