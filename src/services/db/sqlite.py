@@ -23,8 +23,9 @@ class ServiceSqlite:
         SQLITE_PATH.unlink()
 
     @staticmethod
-    def get_data(table_name: str) -> pd.DataFrame:
+    def get_data(table_name: str, columns: list[str]) -> pd.DataFrame:
         """Get data from SQLite."""
         con = sqlite3.connect(SQLITE_PATH)
-        query = "SELECT * FROM %s" % table_name
+        columns = ", ".join(columns)
+        query = "SELECT %s FROM %s" % (columns, table_name)
         return pd.read_sql_query(sql=query, con=con)

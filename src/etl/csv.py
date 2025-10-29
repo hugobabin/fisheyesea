@@ -82,7 +82,7 @@ def transform_fisheries_production(df: pd.DataFrame) -> list[dict]:
     return df_final.rename(
         columns={
             "Country Code": "Country_Code",
-            "2022": "Country_Fishery_Production_2022",
+            "2022": "Country_Fishery_Production",
         }
     )
 
