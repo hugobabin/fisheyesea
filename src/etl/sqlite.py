@@ -8,10 +8,15 @@ from services.util import ServiceUtil
 
 def extract() -> tuple[pd.DataFrame]:
     """Extract data from sqlite."""
-    df_fishery_production = ServiceSqlite.get_data("country_fishery_production")
-    df_population = ServiceSqlite.get_data("country_population")
+    df_fishery_production = ServiceSqlite.get_data(
+        "country_fishery_production", ["Country_Code", "Country_Fishery_Production"]
+    )
+    df_population = ServiceSqlite.get_data(
+        "country_population", ["Country_Code", "Country_Population"]
+    )
     df_seafood_consumption = ServiceSqlite.get_data(
-        "country_seafood_consumption_per_capita"
+        "country_seafood_consumption_per_capita",
+        ["Country_Code", "Country_Seafood_Consumption_Per_Capita"],
     )
     return (df_fishery_production, df_population, df_seafood_consumption)
 
@@ -19,9 +24,6 @@ def extract() -> tuple[pd.DataFrame]:
 def transform(data: tuple[pd.DataFrame]) -> pd.DataFrame:
     """Transform data extracted from Mongo."""
     df_fishery_production, df_population, df_seafood_consumption = data
-    df_fishery_production = df_fishery_production.drop(columns=["index"])
-    df_population = df_population.drop(columns=["index"])
-    df_seafood_consumption = df_seafood_consumption.drop(columns=["index"])
     common_codes = (
         set(df_fishery_production["Country_Code"])
         & set(df_population["Country_Code"])
@@ -94,7 +96,7 @@ def load(data: pd.DataFrame) -> None:
     """Load data into MariaDB."""
     cur = ServiceMaria.get_cursor()
     data["Country_Label"] = data["Country_Code"].apply(ServiceUtil.get_country_label)
-    data_fishery = data[["Country_Code", "Country_Fishery_Production_2022"]].to_dict(
+    data_fishery = data[["Country_Code", "Country_Fishery_Production"]].to_dict(
         orient="records"
     )
     data_seafood = data[
@@ -118,7 +120,7 @@ def load(data: pd.DataFrame) -> None:
             VALUES (
                 2022,
                 '{fishery.get("Country_Code")}',
-                {fishery.get("Country_Fishery_Production_2022")}
+                {fishery.get("Country_Fishery_Production")}
             )
         """
         ServiceMaria.exec(query)
