@@ -2,7 +2,7 @@
 [![GitHub](https://img.shields.io/badge/Hugo%20Babin-%23121011.svg?logo=github&logoColor=white)](https://github.com/hugobabin) [![fisheyesea](https://img.shields.io/badge/fisheyesea_0.1-59A8C9)](https://github.com/hugobabin/fisheyesea) **|** [![Python](https://img.shields.io/badge/Python_3.12-3776AB?logo=python&logoColor=fff)](#) [![FastAPI](https://img.shields.io/badge/FastAPI-009485.svg?logo=fastapi&logoColor=white)](#) [![MariaDB](https://img.shields.io/badge/MariaDB-003545?logo=mariadb&logoColor=white)](#) [![DuckDB](https://img.shields.io/badge/DuckDB-000?logo=duckdb&logoColor=yellow)](#) **|** [![UV](https://img.shields.io/badge/UV-30173d?logo=uv)](#)
 ##### fisheyesea version 0.1 - no UI yet, only accessible through fastapi docs
 ##### This software is accessible via your navigator and allows you to get access to centralized informations from different sources about the overuse of sea-based resource.
-##### This project was made possible thanks to the following data providers : ***data.worldbank.org*** - ***globalfishingwatch.org*** - ***worldometers.info*** - ***ourworldindata.org*** - ***fao.org***
+##### This project was made possible thanks to the following data providers : ***data.worldbank.org*** - ***globalfishingwatch.org*** - ***database.earth*** - ***ourworldindata.org*** - ***fao.org***
 ## Compatibility
 fisheyesea is only available for LINUX distributions, not available for Windows !
 ## How to install
