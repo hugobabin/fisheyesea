@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 from typing import Any
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from routers.countries import router as router_countries
@@ -38,7 +39,29 @@ async def lifespan(app: FastAPI):  # noqa: ANN201
     ServiceLog.console("​bold red", "shutting down fisheyesea...")
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    lifespan=lifespan,
+    title="fisheyesea API",
+    version="0.1",
+    license_info={
+        "name": "MIT",
+        "url": "https://mit-license.org/",
+    },
+    contact={
+        "name": "Hugo Babin",
+        "url": "https://github.com/hugobabin",
+        "email": "hugobabin.contact@gmail.com",
+    },
+    summary="This API provides a consistent access to centralized sea-based resource data for fisheyesea uses.",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.middleware("http")
@@ -58,7 +81,7 @@ async def global_exception_handler(request: Request, exc: Exception) -> JSONResp
     return JSONResponse(status_code=500, content={"detail": "Internal Server Error"})
 
 
-@app.get("/")
+@app.get("/", tags=["Root"])
 def get_root() -> dict:
     """Get root."""
     return {"Hello": "World"}

@@ -26,7 +26,7 @@ etl_skip_bigdata:
 	@ETL_MONGO_DISABLED=true ETL_API_DISABLED=true bash launch-only-etl.bash
 
 etl_skip_others:
-	@ETL_CSV_DISABLED=true ETL_WEBSCRAP_DISABLED=true ETL_SQLITE_DISABLED=true launch-only-etl.bash
+	@ETL_CSV_DISABLED=true ETL_WEBSCRAP_DISABLED=true ETL_SQLITE_DISABLED=true bash launch-only-etl.bash
 
 run_etl:
 	@bash launch-with-etl.bash
