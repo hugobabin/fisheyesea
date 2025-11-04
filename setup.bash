@@ -31,4 +31,7 @@ API_TOKEN=yoursecretkey
 JWT_SECRET=${JWT_SECRET}
 EOF
 
+echo "📦 Creating data/ dir..."
+chmod 777 data/
+
 echo "✅ Setup complete!"
