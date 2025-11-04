@@ -51,7 +51,12 @@ def extract() -> str:
 def transform(data: str) -> list[dict]:
     """Transform webscrapped data."""
     tree = HTMLParser(data)
-    country_rows = tree.css("tr.odd\\:bg-gray-100")
+    # country_rows = tree.css("bg-gray-100")
+    country_rows = [
+        tr
+        for tr in tree.css("tr")
+        if tr.attributes.get("class") == "even:bg-white odd:bg-gray-100"
+    ]
     countries = []
     for country_row in country_rows:
         country_name = country_row.css_first("a").text()
