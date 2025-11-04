@@ -45,7 +45,7 @@ def extract_fisheries_production() -> pd.DataFrame:
         r = httpx.get(CSV_FISHERIES_PRODUCTION_URL)
         r.raise_for_status()
         with zipfile.ZipFile(io.BytesIO(r.content)) as z:
-            z.extract(CSV_FISHERIES_PRODUCTION_NAME, CSV_FISHERIES_PRODUCTION)
+            z.extract(CSV_FISHERIES_PRODUCTION_NAME, "../data")
         ServiceLog.console(
             "bold yellow", "[ETL/CSV] downloaded CSV_FISHERIES_PRODUCTION"
         )
