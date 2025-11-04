@@ -5,6 +5,7 @@ from pathlib import Path
 import httpx
 import pandas as pd
 from selectolax.lexbor import LexborHTMLParser as HTMLParser
+from playwright.sync_api import sync_playwright
 
 from services.log import ServiceLog
 
@@ -30,22 +31,15 @@ def extract() -> str:
     cached_content = get_cached_file()
     if cached_content is not None:
         return cached_content
-    headers = {
-        "User-Agent": "Mozilla/5.0",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.9,fr;q=0.8",
-        "Referer": ROOT,
-    }
-    res = httpx.get(url=URL, headers=headers, timeout=60)
-    if res.status_code != STATUS_CODE_OK:
-        msg = f"[ETL/WEBSCRAP] failure in extract/httpx.get POPULATION - status code is {res.status_code}"
-        ServiceLog.console("bold red", msg)
-        msg = f"[ETL/WEBSCRAP] error is {res.content}"
-        ServiceLog.console("bold red", msg)
-        return None
-    data = res.text
-    CACHE_PATH.write_text(data, encoding="utf-8")
-    return data
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=False)
+        page = browser.new_page()
+        page.goto(URL)
+        page.wait_for_timeout(5000)
+        html = page.content()
+        CACHE_PATH.write_text(html, encoding="utf-8")
+        browser.close()
+    return html
 
 
 def transform(data: str) -> list[dict]:

@@ -35,4 +35,8 @@ echo "📦 Creating data/ dir..."
 mkdir data/
 chmod 777 data/
 
+echo "📦 Installing playwright browsers..."
+sudo apt-get install libnspr4 libnss3 libasound2t64
+python3 -m playwright install chromium
+
 echo "✅ Setup complete!"
