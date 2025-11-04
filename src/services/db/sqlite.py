@@ -20,7 +20,8 @@ class ServiceSqlite:
     @staticmethod
     def clean_data() -> None:
         """Clean data in SQLite."""
-        SQLITE_PATH.unlink()
+        if SQLITE_PATH.exists():
+            SQLITE_PATH.unlink()
 
     @staticmethod
     def get_data(table_name: str, columns: list[str]) -> pd.DataFrame:
