@@ -4,7 +4,7 @@ set -e
 # setup file for fisheyesea
 # bash setup.bash
 
-echo 🔧 Setting up project with uv...
+echo "🔧 Setting up project with uv..."
 
 # install uv if not found
 if ! command -v uv >/dev/null 2>&1; then
@@ -21,7 +21,22 @@ if ! command -v uv >/dev/null 2>&1; then
     export PATH="$HOME/.local/bin:$PATH"
 fi
 
-echo 📦 Syncing project environment...
+echo "📦 Syncing project environment..."
 uv sync
 
-echo ✅ Setup complete!
+echo "📦 Creating config/.env..."
+JWT_SECRET=$(python3 -c "import secrets; print(secrets.token_urlsafe(64))")
+cat > config/.env <<EOF
+API_TOKEN=yoursecretkey
+JWT_SECRET=${JWT_SECRET}
+EOF
+
+echo "📦 Creating data/ dir..."
+mkdir data/
+chmod 777 data/
+
+echo "📦 Installing playwright browsers..."
+sudo apt-get install libnspr4 libnss3 libasound2t64
+uv run python3 -m playwright install chromium
+
+echo "✅ Setup complete!"

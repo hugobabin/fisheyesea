@@ -7,12 +7,12 @@
 fisheyesea is only available for LINUX distributions, not available for Windows !
 ## How to install
 **➪** make sure you have python 3.12 installed (https://www.python.org/downloads/)  
-**➪** git clone https://github.com/hugobabin/fisheyesea **specify_folder_if_needed**  
-**➪** cd **your_folder**  
-**➪** make setup  
+**➪** command: *git clone* https://github.com/hugobabin/fisheyesea **specify_folder_if_needed**  
+**➪** command: *cd* **your_folder**  
+**➪** command: *make setup*  
 **➪** here you go !
 
-(if you're using the ETL, don't forget to get your globalfishingwatch API key here https://globalfishingwatch.org/our-apis/documentation#quick-start)
+(if you're using the ETL, don't forget to get your globalfishingwatch API key here https://globalfishingwatch.org/our-apis/documentation#quick-start, and paste it in your config/.env file at API_TOKEN=yourapitoken)
 
 ## My recommendations
 WIP

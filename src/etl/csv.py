@@ -1,14 +1,19 @@
-import json
-import sqlite3
-from io import StringIO
+import io
+import zipfile
 from pathlib import Path
 
+import httpx
 import pandas as pd
-import numpy as np
 
+from services.db.sqlite import ServiceSqlite
 from services.log import ServiceLog
 from services.util import ServiceUtil
-from services.db.sqlite import ServiceSqlite
+
+CSV_SEAFOOD_CONSUMPTION_URL = "https://ourworldindata.org/grapher/fish-and-seafood-consumption-per-capita.csv?v=1&csvType=full&useColumnShortNames=false"
+CSV_FISHERIES_PRODUCTION_URL = (
+    "https://api.worldbank.org/v2/en/indicator/ER.FSH.CAPT.MT?downloadformat=csv"
+)
+CSV_FISHERIES_PRODUCTION_NAME = "API_ER.FSH.CAPT.MT_DS2_en_csv_v2_6149.csv"
 
 CSV_POPULATION = Path("../data/population-by-country-2022.csv")
 CSV_FISHERIES_PRODUCTION = Path("../data/API_ER.FSH.CAPT.MT_DS2_en_csv_v2_6149.csv")
@@ -34,7 +39,16 @@ def extract_fisheries_production() -> pd.DataFrame:
     """Extract data from CSV_FISHERIES_PRODUCTION."""
     if CSV_FISHERIES_PRODUCTION.exists() is not True:
         ServiceLog.console("bold red", "[ETL/CSV] can't find CSV_FISHERIES_PRODUCTION")
-        return None
+        ServiceLog.console(
+            "bold yellow", "[ETL/CSV] downloading CSV_FISHERIES_PRODUCTION"
+        )
+        r = httpx.get(CSV_FISHERIES_PRODUCTION_URL)
+        r.raise_for_status()
+        with zipfile.ZipFile(io.BytesIO(r.content)) as z:
+            z.extract(CSV_FISHERIES_PRODUCTION_NAME, "../data")
+        ServiceLog.console(
+            "bold yellow", "[ETL/CSV] downloaded CSV_FISHERIES_PRODUCTION"
+        )
     try:
         return pd.read_csv(CSV_FISHERIES_PRODUCTION, skiprows=4)
     except Exception as exc:
@@ -50,7 +64,16 @@ def extract_seafood_consumption() -> pd.DataFrame:
     """Extract data from CSV_SEAFOOD_CONSUMPTION."""
     if CSV_SEAFOOD_CONSUMPTION.exists() is not True:
         ServiceLog.console("bold red", "[ETL/CSV] can't find CSV_SEAFOOD_CONSUMPTION")
-        return None
+        ServiceLog.console(
+            "bold yellow", "[ETL/CSV] downloading CSV_SEAFOOD_CONSUMPTION"
+        )
+        r = httpx.get(CSV_SEAFOOD_CONSUMPTION_URL)
+        r.raise_for_status()
+        with CSV_SEAFOOD_CONSUMPTION.open("wb") as f:
+            f.write(r.content)
+        ServiceLog.console(
+            "bold yellow", "[ETL/CSV] downloaded CSV_SEAFOOD_CONSUMPTION"
+        )
     try:
         return pd.read_csv(CSV_SEAFOOD_CONSUMPTION)
     except Exception as exc:
