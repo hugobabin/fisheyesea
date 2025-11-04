@@ -2,12 +2,9 @@ import json
 from io import StringIO
 from pathlib import Path
 
-import httpx
 import pandas as pd
-from selectolax.lexbor import LexborHTMLParser as HTMLParser
 from playwright.sync_api import sync_playwright
-
-from services.log import ServiceLog
+from selectolax.lexbor import LexborHTMLParser as HTMLParser
 
 STATUS_CODE_OK = 200
 
